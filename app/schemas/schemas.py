@@ -74,3 +74,21 @@ class AppointmentResponse(BaseModel):
     date_time: datetime
     status: AppointmentStatus
     model_config = ConfigDict(from_attributes=True)
+
+
+class BookAppointmentRequest(BaseModel):
+    appointment_id: int
+    patient_name: str
+    patient_phone: str = Field(..., pattern=r"^09\d{9}$")
+
+
+class AppointmentDetailResponse(BaseModel):
+    id: int
+    doctor_name: str
+    specialty: str
+    medical_council_code: str
+    address: str
+    date_time: datetime
+    visit_price: int
+    service_fee: int
+    total_price: int

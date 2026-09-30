@@ -1,10 +1,13 @@
 from fastapi import FastAPI
 from app.database import Base, engine
-from app.models import models
+from app.routers import appointments, doctors
 
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Doctor Appointment API")
+
+app.include_router(doctors.router)
+app.include_router(appointments.router)
 
 
 @app.get("/")
