@@ -65,6 +65,9 @@ class Doctor(Base):
     reviews = relationship("Review", back_populates="doctor")
     appointments = relationship("Appointment", back_populates="doctor")
 
+    visit_price = Column(Integer, default=200000)  
+    service_fee = Column(Integer, default=20000)
+
 
 class Appointment(Base):
     __tablename__ = "appointments"
@@ -78,6 +81,9 @@ class Appointment(Base):
 
     doctor = relationship("Doctor", back_populates="appointments")
     patient = relationship("User", back_populates="appointments")
+
+    patient_name = Column(String(100), nullable=True)  
+    patient_phone = Column(String(15), nullable=True)
 
 
 class Review(Base):
