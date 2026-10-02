@@ -74,16 +74,28 @@ class Appointment(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     doctor_id = Column(Integer, ForeignKey("doctors.id"), nullable=False)
-    patient_id = Column(Integer, ForeignKey("users.id"), nullable=True)
+    patient_id = Column(
+        Integer, ForeignKey("users.id"), nullable=True
+    )   
 
-    date_time = Column(DateTime, nullable=False, index=True) 
-    status = Column(Enum(AppointmentStatus), default=AppointmentStatus.AVAILABLE)
+    date_time = Column(DateTime, nullable=False, index=True)
+    status = Column(
+        Enum(AppointmentStatus), default=AppointmentStatus.AVAILABLE
+    )
+
+    patient_name = Column(String(100), nullable=True)
+    patient_phone = Column(String(15), nullable=True)
+
+    tracking_code = Column(
+        String(20), unique=True, nullable=True, index=True
+    )   
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(
+        DateTime, default=datetime.utcnow, onupdate=datetime.utcnow
+    )
 
     doctor = relationship("Doctor", back_populates="appointments")
     patient = relationship("User", back_populates="appointments")
-
-    patient_name = Column(String(100), nullable=True)  
-    patient_phone = Column(String(15), nullable=True)
 
 
 class Review(Base):

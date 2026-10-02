@@ -47,7 +47,7 @@ def book_appointment(
         )
 
     appointment.status = AppointmentStatus.BOOKED
-    appointment.user_id = current_user.id
+    appointment.patient_id = current_user.id
     appointment.patient_name = payload.patient_name
     appointment.patient_phone = payload.patient_phone
 
@@ -67,7 +67,7 @@ def get_my_appointments(
 ):
     return (
         db.query(Appointment)
-        .filter(Appointment.user_id == current_user.id)
+        .filter(Appointment.patient_id == current_user.id)
         .all()
     )
 
@@ -90,14 +90,14 @@ def cancel_appointment(
             detail="The desire Appointment was not found",
         )
 
-    if appointment.user_id != current_user.id:
+    if appointment.patient_id != current_user.id:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="You are not allowed to cancel other user's turns",
         )
 
     appointment.status = AppointmentStatus.AVAILABLE
-    appointment.user_id = None
+    appointment.patient_id = None
     appointment.patient_name = None
     appointment.patient_phone = None
 
