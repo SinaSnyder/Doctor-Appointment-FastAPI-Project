@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 from app.database import SessionLocal, engine, Base
-from app.models.models import Doctor, Appointment, AppointmentStatus
+from app.models.models import Doctor, Appointment, AppointmentStatus, GenderEnum
 
 Base.metadata.create_all(bind=engine)
 
@@ -17,7 +17,8 @@ def seed_data():
         specialty="Dentist",
         medical_council_code="MC-12345",
         city="Tehran",
-        gender="male",
+        address="Tehran, velenjak",
+        gender=GenderEnum.MALE,
         visit_price=250000,
         service_fee=25000,
     )
