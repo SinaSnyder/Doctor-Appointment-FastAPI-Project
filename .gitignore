@@ -1,7 +1,0 @@
-.venv/
-venv/
-__pycache__/
-*.pyc
-.env
-*.db
-doctor_appointment.db

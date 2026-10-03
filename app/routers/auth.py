@@ -17,20 +17,23 @@ router = APIRouter(prefix="/auth", tags=["Authentication"])
     "/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED
 )
 def register_user(user_data: UserCreate, db: Session = Depends(get_db)):
-    existing_user = (
-        db.query(User).filter(User.phone == user_data.phone).first()
+    db_user = (
+        db.query(User)
+        .filter(User.phone_number == user_data.phone_number)
+        .first()
     )
-    if existing_user:
+    if db_user:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="User with this phone number already exists",
+            detail="Phone number already registered",
         )
 
     hashed_pwd = get_password_hash(user_data.password)
+
     new_user = User(
         full_name=user_data.full_name,
-        phone=user_data.phone,
-        hashed_password=hashed_pwd,
+        phone_number=user_data.phone_number,
+        hashed_password=hashed_pwd,  
     )
     db.add(new_user)
     db.commit()
@@ -43,7 +46,7 @@ def login(
     form_data: OAuth2PasswordRequestForm = Depends(),
     db: Session = Depends(get_db),
 ):
-    user = db.query(User).filter(User.phone == form_data.username).first()
+    user = db.query(User).filter(User.phone_number == form_data.username).first()
     if not user or not verify_password(form_data.password, user.hashed_password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -55,7 +58,7 @@ def login(
         minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES
     )
     access_token = create_access_token(
-        data={"sub": user.phone}, expires_delta=access_token_expires
+    data={"sub": str(user.phone_number)}, expires_delta=access_token_expires
     )
 
     return {"access_token": access_token, "token_type": "bearer"}
