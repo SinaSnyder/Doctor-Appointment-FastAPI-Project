@@ -34,6 +34,7 @@ class User(Base):
     full_name = Column(String(100), nullable=False)
     phone_number = Column(String(15), unique=True, index=True, nullable=False)
     is_active = Column(Boolean, default=True)
+    hashed_password = Column(String)
 
     reviews = relationship("Review", back_populates="patient")
     appointments = relationship("Appointment", back_populates="patient")
